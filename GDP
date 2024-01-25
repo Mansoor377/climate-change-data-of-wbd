@@ -1,0 +1,35 @@
+# function to to form a dataframe with Year, GDP and Country
+def extract_columns(df_cleaned):
+    df=pd.DataFrame()
+    # pick data for the recent 10 years, note that the data sorted in descending order of year
+    df['Year']=df_cleaned.loc[:10, 'Year']
+    df['GDP in USD']=df_cleaned.loc[:10, 'GDP in USD']
+    df['Country']=df_cleaned.loc[:10, 'Country']
+    return df
+
+# function to fetch a single dataframe with 3 features from each country
+def form_gdp_df():
+    # function call to extract_columns()
+    indf=extract_columns(df_cleaned_in)
+    usdf=extract_columns(df_cleaned_us)
+    cndf=extract_columns(df_cleaned_cn)
+    jpdf=extract_columns(df_cleaned_jp)
+    cadf=extract_columns(df_cleaned_ca)
+    gbdf=extract_columns(df_cleaned_gb)
+    zadf=extract_columns(df_cleaned_za)
+    # combine the 7 dfs into a single df with 3 columns
+    # we ignore the original index
+    gdp_df=pd.concat([indf, usdf, cndf, jpdf, cadf, gbdf, zadf], ignore_index=True)
+    return gdp_df
+
+# get the combined DF
+gdp_df=form_gdp_df()
+
+print("Few records from the Dataframe containing Year, GDP and Country:")
+display(gdp_df.head())
+
+# set figure size
+plt.figure(figsize=(7, 5))
+sns.set(style="whitegrid")
+# plot using seaborn library
+ax=sns.lineplot(x='Year', y='GDP in USD', hue='Country', style="Country",palette="Set2", markers=True, dashes=False, data=gdp_df, linewidth=2.5)
